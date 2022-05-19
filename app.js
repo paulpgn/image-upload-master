@@ -48,36 +48,27 @@ var upload = multer({
     // mypic is the name of file attribute
 }).single("mypic");
 
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    next();
+});
+
 app.get("/", function (req, res) {
     res.render("app");
 })
 
 app.post("/uploadProfilePicture", function (req, res, next) {
-
-    // Error MiddleWare for multer file upload, so if any
-    // error occurs, the image would not be uploaded!
     upload(req, res, function (err) {
-
         if (err) {
-
-            // ERROR occured (here it can be occured due
-            // to uploading image of size greater than
-            // 1MB or uploading different file type)
             res.send(err)
         }
         else {
-
-            // SUCCESS, image successfully uploaded
             res.send("Success, Image uploaded!")
         }
     })
 })
 
-// Take any port number of your choice which
-// is not taken by any other process
-app.listen(8080, function (error) {
-    if (error) throw error
-    console.log("Server created Successfully on PORT 8080")
-})
 
 module.exports = app;
